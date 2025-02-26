@@ -39,7 +39,7 @@ final class PrototypeTests: XCTestCase {
             
                 public var body: some View {
                     LabeledContent("MyClassView.decimalValue.label") {
-                        LabeledContent("MyClassView.decimalValue", value: model.decimalValue, format: .custom)
+                        LabeledContent("MyClassView.decimalValue", value: .custom.string(for: model.decimalValue) ?? "")
                     }
                 }
             }

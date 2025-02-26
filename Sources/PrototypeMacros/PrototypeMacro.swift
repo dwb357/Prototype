@@ -385,7 +385,7 @@ extension PrototypeMacro {
         } else if spec.type.isNumeric {
             let formatExpression = spec.formatExpression ?? "numberFormatter"
 
-            result.append("LabeledContent(\(key), value: model.\(spec.name), format: \(formatExpression))")
+            result.append("LabeledContent(\(key), value: \(formatExpression).string(for: model.\(spec.name)) ?? \"\")")
         } else {
             result.append("\(spec.type.name)View(model: model.\(spec.name))")
         }
