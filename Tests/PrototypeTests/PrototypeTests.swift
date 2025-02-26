@@ -12,7 +12,7 @@ let testMacros: [String: Macro.Type] = [
 #endif
 
 final class PrototypeTests: XCTestCase {
-    func testProtoptypeMacroSupportsDecimal() throws {
+    func testPrototypeMacroSupportsDecimal() throws {
 #if canImport(PrototypeMacros)
         assertMacroExpansion(
             """
@@ -30,9 +30,11 @@ final class PrototypeTests: XCTestCase {
             
             struct MyClassView: View {
                 public let model: MyClass
+                private let numberFormatter: NumberFormatter
             
-                public init(model: MyClass) {
+                public init(model: MyClass, numberFormatter: NumberFormatter = .init()) {
                     self.model = model
+                    self.numberFormatter = numberFormatter
                 }
             
                 public var body: some View {
@@ -435,11 +437,13 @@ final class PrototypeTests: XCTestCase {
             
             struct SampleView<Data>: View where Data: Match {
                 public let model: Sample<Data>
-            
-                public init(model: Sample<Data>) {
+                private let numberFormatter: NumberFormatter
+
+                public init(model: Sample<Data>, numberFormatter: NumberFormatter = .init()) {
                     self.model = model
+                    self.numberFormatter = numberFormatter
                 }
-            
+
                 public var body: some View {
                     EmptyView()
                 }

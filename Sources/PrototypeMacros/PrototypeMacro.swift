@@ -331,9 +331,11 @@ extension PrototypeMacro {
                 """
                 \(raw: spec.accessLevelModifiers.structDeclAccessLevelModifiers) struct \(raw: spec.name)View\(raw: spec.genericParametersClause): View \(raw: spec.genericWhereClause){
                 public let model: \(raw: spec.name)\(raw: spec.genericParameters)
+                private let numberFormatter: NumberFormatter
                 
-                public init(model: \(raw: spec.name)\(raw: spec.genericParameters)) {
+                public init(model: \(raw: spec.name)\(raw: spec.genericParameters), numberFormatter: NumberFormatter = .init()) {
                     self.model = model
+                    self.numberFormatter = numberFormatter
                 }
                 
                 public var body: some View {
@@ -371,24 +373,19 @@ extension PrototypeMacro {
             let formatArgument = spec.formatExpression.flatMap { expression in
                 ", format: \(expression)"
             } ?? ""
-
             if spec.attributes.contains(.secure) {
                 result.append("LabeledContent(\(key), value: \"********\"\(formatArgument))")
             } else {
                 result.append("LabeledContent(\(key), value: model.\(spec.name)\(formatArgument))")
             }
         } else if spec.type.name == "Date" {
-            if let formatExpression = spec.formatExpression {
-                result.append("LabeledContent(\(key), value: model.\(spec.name), format: \(formatExpression))")
-            } else {
-                result.append("LabeledContent(\(key), value: model.\(spec.name), format: .dateTime)")
-            }
+            let formatExpression = spec.formatExpression ?? ".dateTime"
+
+            result.append("LabeledContent(\(key), value: model.\(spec.name), format: \(formatExpression))")
         } else if spec.type.isNumeric {
-            if let formatExpression = spec.formatExpression {
-                result.append("LabeledContent(\(key), value: model.\(spec.name), format: \(formatExpression))")
-            } else {
-                result.append("LabeledContent(\(key), value: model.\(spec.name), format: .number)")
-            }
+            let formatExpression = spec.formatExpression ?? "numberFormatter"
+
+            result.append("LabeledContent(\(key), value: model.\(spec.name), format: \(formatExpression))")
         } else {
             result.append("\(spec.type.name)View(model: model.\(spec.name))")
         }
